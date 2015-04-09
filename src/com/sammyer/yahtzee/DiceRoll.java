@@ -12,7 +12,7 @@ public class DiceRoll {
 	//found in the roll
 	//it can be converted also into a densely packed hash value for array storage
 
-	private static int[] DICE_HASH_INDEX={0,1,7,28,84,210,462};
+	private static int[] DICE_HASH_INDEX={0,1,7,28,84,210,462}; //i.e. 7 choose x
 	public static int HASH_SIZE =462;
 
 	//lookup table hash->dice

@@ -9,12 +9,12 @@ import java.util.List;
  * Time: 8:20 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RollStrategy {
+public class RollStrategy implements IRollStrategy {
 	private BestCategoryScore categoryChooser;
 	private ScoreMaximizer firstRoll;
 	private ScoreMaximizer secondRoll;
 
-	public RollStrategy(StrategyLookup strategyTable, List<RollCategory> availableCategories) {
+	public RollStrategy(StrategyDatabase strategyTable, List<RollCategory> availableCategories) {
 		categoryChooser=new BestCategoryScore(strategyTable,availableCategories);
 		secondRoll=new ScoreMaximizer(categoryChooser);
 		firstRoll=new ScoreMaximizer(secondRoll);

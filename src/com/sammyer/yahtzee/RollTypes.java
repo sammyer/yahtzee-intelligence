@@ -1,5 +1,8 @@
 package com.sammyer.yahtzee;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: sam
@@ -8,6 +11,24 @@ package com.sammyer.yahtzee;
  * To change this template use File | Settings | File Templates.
  */
 public class RollTypes {
+	private static List<RollCategory> rollCategories;
+
+	public static List<RollCategory> getRollCategories() {
+		if (rollCategories==null) {
+			rollCategories =new ArrayList<RollCategory>();
+			for (int i=1;i<=6;i++) rollCategories.add(new RollTypes.NumberRoll(i,true));
+			rollCategories.add(RollTypes.threeOfAKind);
+			rollCategories.add(RollTypes.fourOfAKind);
+			rollCategories.add(RollTypes.fullHouse);
+			rollCategories.add(RollTypes.smallStraight);
+			rollCategories.add(RollTypes.largeStraight);
+			rollCategories.add(RollTypes.yahtzee);
+			rollCategories.add(RollTypes.chance);
+		}
+		return rollCategories;
+
+	}
+
 	public static RollCategory largeStraight=new RollCategory("Lg Straight") {
 		@Override
 		public float getDiceScore(int dice) {

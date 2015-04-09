@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class BestCategoryScore implements ScoreHeuristic {
 	private List<RollCategory> availableCategories;
-	private StrategyLookup strategyTable;
+	private StrategyDatabase strategyTable;
 	private int numCategories;
 
-	public BestCategoryScore(StrategyLookup strategyTable, List<RollCategory> availableCategories) {
+	public BestCategoryScore(StrategyDatabase strategyTable, List<RollCategory> availableCategories) {
 		this.availableCategories = availableCategories;
 		this.strategyTable = strategyTable;
 		this.numCategories =availableCategories.size();
