@@ -51,7 +51,7 @@ public class StrategyDatabase {
 		int idx=getIdx(rollCategories,strategy.getAvailableCategories());
 		strategies[idx]=new StrategyDatabaseEntry(strategy);
 	}
-	private IRollStrategy getStrategy(int idx) {
+	protected IRollStrategy getStrategy(int idx) {
 		return strategies[idx];
 	}
 //----------------------------------------------------------
@@ -76,7 +76,7 @@ public class StrategyDatabase {
 				strategies[i]=new StrategyDatabaseEntry(data,getCategories(rollCategories,i));
 			}
 		} catch (NullPointerException e) {
-			//failed
+			e.printStackTrace();
 		} finally {
 			stream.close();
 		}

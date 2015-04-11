@@ -35,14 +35,7 @@ public class BestCategoryScore implements ScoreHeuristic {
 	}
 
 	public String getCategoryNames() {
-		StringBuilder s=new StringBuilder();
-		boolean first=true;
-		for (RollCategory category:availableCategories) {
-			if (!first) s.append(", ");
-			first=false;
-			s.append(category.getName());
-		}
-		return s.toString();
+		return RollCategory.getCategoryNames(availableCategories);
 	}
 
 	private CategoryScore getBestCategoryScore(int dice) {

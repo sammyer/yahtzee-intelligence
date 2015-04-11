@@ -29,6 +29,10 @@ public class StrategyDatabaseEntry implements IRollStrategy {
 		rollCategories=RollTypes.getRollCategories();
 		hashOffset=rolls.startHashIdx(5);
 		arrayLen=rolls.endHashIdx(5)-hashOffset;
+
+		keepFirstRollHashed=new short[arrayLen];
+		keepSecondRollHashed=new short[arrayLen];
+		categoryToChooseIndex=new byte[arrayLen];
 	}
 
 	public StrategyDatabaseEntry(RollStrategy strategy) {
@@ -36,10 +40,6 @@ public class StrategyDatabaseEntry implements IRollStrategy {
 
 		availableCategories=strategy.getAvailableCategories();
 		expectedScore=strategy.getExpectedScore();
-
-		keepFirstRollHashed=new short[arrayLen];
-		keepSecondRollHashed=new short[arrayLen];
-		categoryToChooseIndex=new byte[arrayLen];
 
 		for (int i=0;i<arrayLen;i++) {
 			int dice=rolls.unhashDice(i+hashOffset);
@@ -62,7 +62,7 @@ public class StrategyDatabaseEntry implements IRollStrategy {
 
 	@Override
 	public String getCategoryNames() {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return RollCategory.getCategoryNames(availableCategories);
 	}
 
 	@Override

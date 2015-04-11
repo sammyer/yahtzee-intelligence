@@ -16,7 +16,7 @@ public class RollTypes {
 	public static List<RollCategory> getRollCategories() {
 		if (rollCategories==null) {
 			rollCategories =new ArrayList<RollCategory>();
-			for (int i=1;i<=6;i++) rollCategories.add(new RollTypes.NumberRoll(i,true));
+			for (int i=1;i<=6;i++) rollCategories.add(new RollTypes.NumberRoll(i));
 			rollCategories.add(RollTypes.threeOfAKind);
 			rollCategories.add(RollTypes.fourOfAKind);
 			rollCategories.add(RollTypes.fullHouse);
@@ -120,19 +120,21 @@ public class RollTypes {
 				{-12, -9, -3, 6, 15, 20},
 				{-13, -11, -6, 6, 17, 21}};
 		private int number;
-		private boolean useBonus;
 
-		public NumberRoll(int number, boolean useBonus) {
+		public NumberRoll(int number) {
 			super(number+"s");
 			this.number = number;
-			this.useBonus=useBonus;
 		}
 
 		@Override
 		public float getDiceScore(int dice) {
 			int count=DiceRoll.getCount(dice,number);
-			if (useBonus) return count*number+BONUS[number-1][count];
-			return count*number;
+			return count*number+BONUS[number-1][count];
+		}
+
+		@Override
+		public int getPointsScored(int dice) {
+			return DiceRoll.getCount(dice,number)*number;
 		}
 	}
 

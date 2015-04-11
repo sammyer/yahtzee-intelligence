@@ -17,7 +17,7 @@ public class ScoreMaximizerTest extends TestCase {
 	public void setUp() throws Exception {
 		long t1,t2;
 		t1=System.currentTimeMillis();
-		sixes=new ScoreMaximizer(new RollTypes.NumberRoll(6,false));
+		sixes=new ScoreMaximizer(new RollTypes.NumberRoll(6));
 		sixes=new ScoreMaximizer(sixes);
 ;		t2=System.currentTimeMillis();
 		System.out.println("Sixes - time=" + (t2 - t1) + "ms");

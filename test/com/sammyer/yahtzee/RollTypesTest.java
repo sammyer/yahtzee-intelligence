@@ -53,16 +53,10 @@ public class RollTypesTest extends TestCase {
 	}
 	public void testNumbers() throws Exception {
 		ScoreHeuristic roll;
-		roll=new RollTypes.NumberRoll(5,false);
-		check(roll,65456,10);
-		check(roll, 11111, 0);
-		roll=new RollTypes.NumberRoll(1,false);
-		check(roll,65456,0);
-		check(roll, 11111, 5);
-		roll=new RollTypes.NumberRoll(6,true);
+		roll=new RollTypes.NumberRoll(6);
 		check(roll,65456,6);
 		check(roll, 11111, -13);
-		roll=new RollTypes.NumberRoll(1,true);
+		roll=new RollTypes.NumberRoll(1);
 		check(roll,65456,1);
 		check(roll, 11111, 14);
 	}
