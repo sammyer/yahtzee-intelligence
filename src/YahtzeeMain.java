@@ -11,22 +11,21 @@ import java.util.List;
  * Time: 3:38 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Main {
-	private static String DB_PATH="C:\\Users\\sam\\Documents\\python\\yahtzee\\yahtzee.db";
+public class YahtzeeMain {
 	public static void main(String args[]) {
 		//MainTest test=new MainTest();
 		//test.test();
 
-		Main main=new Main();
+		YahtzeeMain main=new YahtzeeMain();
 		//main.generateDatabase();
 		main.game();
 		//main.test();
 	}
 
 	private void game() {
-		StrategyDatabase database=new StrategyDatabase();
+		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
 		try {
-			database.loadAll(DB_PATH);
+			database.load(GameConstants.DB_PATH);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -35,9 +34,9 @@ public class Main {
 	}
 
 	private void test() {
-		StrategyDatabase database=new StrategyDatabase();
+		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
 		try {
-			database.loadAll(DB_PATH);
+			database.load(GameConstants.DB_PATH);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,22 +44,22 @@ public class Main {
 		for (int i=11;i<=13;i++) {
 			CombinationIterator<RollCategory> iterator=new CombinationIterator<RollCategory>(RollTypes.getRollCategories(),i);
 			while (iterator.hasNext()) {
-				IRollStrategy strategy=database.getStrategy(iterator.next());
+				List<RollCategory> categories=iterator.next();
 				System.out.println(String.format("%s - %.2f",
-						strategy.getCategoryNames(),
-						strategy.getExpectedScore()));
+						RollCategory.getCategoryNames(categories),
+						database.getExpectedScore(categories)));
 			}
 		}
 	}
 
 	private void generateDatabase() {
-		StrategyCalculator calculator=new StrategyCalculator();
+		ExpectedScoreCalculator calculator=new ExpectedScoreCalculator();
 		long t=System.currentTimeMillis();
-		StrategyDatabase strategyDatabase=calculator.generateStrategies();
+		ExpectedScoreDatabase expectedScoreDatabase =calculator.generateStrategies();
 		long tdiff=System.currentTimeMillis()-t;
 
 		try {
-			strategyDatabase.save(DB_PATH);
+			expectedScoreDatabase.save(GameConstants.DB_PATH);
 		} catch (IOException e) {
 			System.out.println("Error saving database - "+e.toString());
 		}

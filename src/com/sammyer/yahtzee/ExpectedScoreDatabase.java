@@ -12,11 +12,11 @@ import java.util.List;
  * Time: 9:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StrategyDatabase {
+public class ExpectedScoreDatabase {
 	private List<RollCategory> rollCategories;
-	private StrategyDatabaseEntry[] strategies=new StrategyDatabaseEntry[8192];
+	private float[] expectedScore=new float[8192];
 
-	public StrategyDatabase() {
+	public ExpectedScoreDatabase() {
 		rollCategories=RollTypes.getRollCategories();
 	}
 //----------------------------------------------------------
@@ -48,68 +48,53 @@ public class StrategyDatabase {
 	}
 //----------------------------------------------------------
 	public void add(RollStrategy strategy) {
-		int idx=getIdx(rollCategories,strategy.getAvailableCategories());
-		strategies[idx]=new StrategyDatabaseEntry(strategy);
+		add(strategy.getAvailableCategories(),strategy.getExpectedScore());
 	}
-	protected IRollStrategy getStrategy(int idx) {
-		return strategies[idx];
+	void add(List<RollCategory> availableCategories, float score) {
+		int idx=getIdx(rollCategories,availableCategories);
+		expectedScore[idx]=score;
+	}
+	protected float getExpectedScore(int idx) {
+		return expectedScore[idx];
 	}
 //----------------------------------------------------------
 	public void save(String path) throws IOException {
-		FileOutputStream stream = new FileOutputStream(path);
+		FileOutputStream fileStream = new FileOutputStream(path);
+		DataOutputStream dataStream = new DataOutputStream(fileStream);
 		try {
-			for (int i=1;i<8192;i++) {
-				stream.write(strategies[i].toBytes());
+			for (int i=0;i<8192;i++) {
+				dataStream.writeFloat(expectedScore[i]);
 			}
 		} catch (NullPointerException e) {
 			//failed
 		} finally {
-			stream.close();
+			fileStream.close();
 		}
 	}
-	public void loadAll(String path) throws IOException {
-		FileInputStream stream=new FileInputStream(path);
-		byte[] data=new byte[StrategyDatabaseEntry.BYTE_SIZE];
+	public void load(String path) throws IOException {
+		FileInputStream fileStream=new FileInputStream(path);
+		DataInputStream dataStream = new DataInputStream(fileStream);
 		try {
-			for (int i=1;i<8192;i++) {
-				stream.read(data);
-				strategies[i]=new StrategyDatabaseEntry(data,getCategories(rollCategories,i));
+			for (int i=0;i<8192;i++) {
+				expectedScore[i]=dataStream.readFloat();
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} finally {
-			stream.close();
+			fileStream.close();
 		}
 	}
 
 //----------------------------------------------------------
 
-	public IRollStrategy getStrategy(List<RollCategory> categories) {
-		return getStrategy(getIdx(rollCategories, categories));
-	}
-	public IRollStrategy getStrategy(RollCategory category) {
-		return getStrategy(getIdx(rollCategories, category));
-	}
-	public IRollStrategy getStrategy(RollCategory... categories) {
-		return getStrategy(Arrays.asList(categories));
-	}
-
 	public float getExpectedScore(List<RollCategory> categories, RollCategory categoryToExclude) {
 		int idx=getIdx(categories)-getIdx(categoryToExclude);
-		return getStrategy(idx).getExpectedScore();
+		return getExpectedScore(idx);
 	}
 
 	public float getExpectedScore(List<RollCategory> categories) {
-		return getStrategy(categories).getExpectedScore();
+		int idx=getIdx(categories);
+		return getExpectedScore(idx);
 	}
 
-	public int getDiceToKeepFirstRoll(List<RollCategory> categories, int dice) {
-		return getStrategy(categories).getDiceToKeepFirstRoll(dice);
-	}
-	public int getDiceToKeepSecondRoll(List<RollCategory> categories, int dice) {
-		return getStrategy(categories).getDiceToKeepFirstRoll(dice);
-	}
-	public RollCategory getBestCategory(List<RollCategory> categories, int dice) {
-		return getStrategy(categories).getBestCategory(dice);
-	}
 }

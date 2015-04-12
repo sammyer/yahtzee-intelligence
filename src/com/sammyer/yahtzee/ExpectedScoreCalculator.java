@@ -9,14 +9,14 @@ import java.util.List;
  * Time: 5:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StrategyCalculator {
+public class ExpectedScoreCalculator {
 
-	public StrategyDatabase generateStrategies() {
+	public ExpectedScoreDatabase generateStrategies() {
 		return generateStrategies(RollTypes.getRollCategories().size());
 	}
 
-	public StrategyDatabase generateStrategies(int maxLevel) {
-		StrategyDatabase database=new StrategyDatabase();
+	public ExpectedScoreDatabase generateStrategies(int maxLevel) {
+		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
 		RollStrategy strategy;
 		List<RollCategory> categorySet;
 		int idx;

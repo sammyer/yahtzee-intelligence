@@ -13,7 +13,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BestCategoryScoreTest extends TestCase {
-	StrategyDatabase database;
+	ExpectedScoreDatabase database;
 	List<RollCategory> rollCategories;
 	RollCategory cat1;
 	RollCategory cat2;
@@ -28,17 +28,17 @@ public class BestCategoryScoreTest extends TestCase {
 
 	}
 
-	public void testGetDiceScore() throws Exception {
-		database=new MockStrategyDatabase(cat1,cat2,10,10);
+	public void testGetDiceScoreEstimated() throws Exception {
+		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
 		assertEquals(getScore(0x111110),50f);
-		database=new MockStrategyDatabase(cat1,cat2,50,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,50,10);
 		assertEquals(getScore(0x111110),90f);
-		database=new MockStrategyDatabase(cat1,cat2,10,50);
+		database=new MockExpectedScoreDatabase(cat1,cat2,10,50);
 		assertEquals(getScore(0x111110),80f);
 
-		database=new MockStrategyDatabase(cat1,cat2,10,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
 		assertEquals(getScore(0x021110),40f);
-		database=new MockStrategyDatabase(cat1,cat2,60,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,60,10);
 		assertEquals(getScore(0x021110),60f);
 	}
 
@@ -50,20 +50,17 @@ public class BestCategoryScoreTest extends TestCase {
 		return chooser.getDiceScore(dice);
 	}
 
-
-
-
 	public void testGetBestCategory() throws Exception {
-		database=new MockStrategyDatabase(cat1,cat2,10,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
 		assertEquals(getCategory(0x111110),cat2);
-		database=new MockStrategyDatabase(cat1,cat2,50,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,50,10);
 		assertEquals(getCategory(0x111110),cat2);
-		database=new MockStrategyDatabase(cat1,cat2,10,50);
+		database=new MockExpectedScoreDatabase(cat1,cat2,10,50);
 		assertEquals(getCategory(0x111110),cat1);
 
-		database=new MockStrategyDatabase(cat1,cat2,10,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
 		assertEquals(getCategory(0x021110),cat1);
-		database=new MockStrategyDatabase(cat1,cat2,50,10);
+		database=new MockExpectedScoreDatabase(cat1,cat2,50,10);
 		assertEquals(getCategory(0x021110),cat2);
 	}
 
@@ -82,13 +79,13 @@ public class BestCategoryScoreTest extends TestCase {
 	 * Time: 9:17 PM
 	 * To change this template use File | Settings | File Templates.
 	 */
-	private static class MockStrategyDatabase extends StrategyDatabase {
+	private static class MockExpectedScoreDatabase extends ExpectedScoreDatabase {
 		private RollCategory cat1;
 		private RollCategory cat2;
 		private float score1;
 		private float score2;
 
-		private MockStrategyDatabase(RollCategory cat1, RollCategory cat2, float score1, float score2) {
+		private MockExpectedScoreDatabase(RollCategory cat1, RollCategory cat2, float score1, float score2) {
 			this.cat1 = cat1;
 			this.cat2 = cat2;
 			this.score1 = score1;

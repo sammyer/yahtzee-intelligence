@@ -26,45 +26,62 @@ public class RollTypes {
 			rollCategories.add(RollTypes.chance);
 		}
 		return rollCategories;
+	}
 
+	public static RollCategory getNumberCategory(int n) {
+		return getRollCategories().get(n-1);
 	}
 
 	public static RollCategory largeStraight=new RollCategory("Lg Straight") {
 		@Override
-		public float getDiceScore(int dice) {
-			if ((dice&0x0FFFF0)==0x011110) return 40;
-			else return 0;
+		public boolean matches(int dice) {
+			return ((dice&0x0FFFF0)==0x011110)&&((dice&0xF0000F)>0);
+		}
+
+		@Override
+		public int getPointsScoredIfMatches(int dice) {
+			return 40;
 		}
 	};
 
 	public static RollCategory smallStraight=new RollCategory("Sm Straight") {
 		@Override
-		public float getDiceScore(int dice) {
+		public boolean matches(int dice) {
 			int consecutive=0;
 			DiceRoll.CountIterator counts=new DiceRoll.CountIterator(dice);
 			for (int i=0;i<6;i++) {
 				if (counts.next()==0) consecutive=0;
 				else consecutive++;
-				if (consecutive==4) return 30;
+				if (consecutive==4) return true;
 			}
-			return 0;
+			return false;
+		}
+
+		@Override
+		public int getPointsScoredIfMatches(int dice) {
+			return 30;
 		}
 	};
 
 	public static RollCategory yahtzee=new RollCategory("Yahtzee") {
 		@Override
-		public float getDiceScore(int dice) {
+		public boolean matches(int dice) {
 			DiceRoll.CountIterator counts=new DiceRoll.CountIterator(dice);
 			while (counts.hasNext()) {
-				if (counts.next()==5) return 50;
+				if (counts.next()==5) return true;
 			}
-			return 0;
+			return false;
+		}
+
+		@Override
+		public int getPointsScoredIfMatches(int dice) {
+			return 50;
 		}
 	};
 
 	public static RollCategory fullHouse=new RollCategory("Full House") {
 		@Override
-		public float getDiceScore(int dice) {
+		public boolean matches(int dice) {
 			DiceRoll.CountIterator counts=new DiceRoll.CountIterator(dice);
 			boolean hasPair=false;
 			boolean hasTriple=false;
@@ -73,9 +90,14 @@ public class RollTypes {
 				if (c<2) continue;
 				if (c==3) hasTriple=true;
 				else if (c==2) hasPair=true;
-				if (c==5||(hasPair&&hasTriple)) return 25;
+				if (c==5||(hasPair&&hasTriple)) return true;
 			}
-			return 0;
+			return false;
+		}
+
+		@Override
+		public int getPointsScoredIfMatches(int dice) {
+			return 25;
 		}
 	};
 
@@ -88,7 +110,7 @@ public class RollTypes {
 		}
 
 		@Override
-		public float getDiceScore(int dice) {
+		public int getPointsScoredIfMatches(int dice) {
 			boolean isMatch=false;
 			int sum=0;
 			for (int n=1;n<=6;n++) {
@@ -106,7 +128,7 @@ public class RollTypes {
 
 	public static RollCategory chance=new RollCategory("Chance") {
 		@Override
-		public float getDiceScore(int dice) {
+		public int getPointsScoredIfMatches(int dice) {
 			return DiceRoll.getDiceSum(dice);
 		}
 	};
@@ -133,7 +155,7 @@ public class RollTypes {
 		}
 
 		@Override
-		public int getPointsScored(int dice) {
+		public int getPointsScoredIfMatches(int dice) {
 			return DiceRoll.getCount(dice,number)*number;
 		}
 	}

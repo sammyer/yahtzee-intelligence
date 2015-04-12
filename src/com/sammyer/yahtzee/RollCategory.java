@@ -16,11 +16,25 @@ public abstract class RollCategory implements ScoreHeuristic {
 		this.name = name;
 	}
 
+	//get points scored
+	public int getPointsScored(int dice) {
+		return matches(dice)?getPointsScoredIfMatches(dice):0;
+	}
+
+	//matches category
+	public boolean matches(int dice) {
+		return true;
+	}
+
+	//for yahtzees - get points scored when matches
+	//this way you can score e.g. large straight on a yahtzee
+	abstract public int getPointsScoredIfMatches(int dice);
+
 	//getDiceScore is score for heuristic calcualtions
 	//this return the actual in-game points scored
 	//usually it is the same, but can be different
-	public int getPointsScored(int dice) {
-		return Math.round(getDiceScore(dice));
+	public float getDiceScore(int dice) {
+		return getPointsScored(dice);
 	}
 
 	public String getName() {

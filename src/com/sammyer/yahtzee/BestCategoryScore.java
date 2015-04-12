@@ -10,13 +10,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BestCategoryScore implements ScoreHeuristic {
-	private List<RollCategory> availableCategories;
-	private StrategyDatabase strategyTable;
-	private int numCategories;
+	protected List<RollCategory> availableCategories;
+	protected ExpectedScoreDatabase expectedScoreDatabase;
+	protected int numCategories;
 
-	public BestCategoryScore(StrategyDatabase strategyTable, List<RollCategory> availableCategories) {
+	public BestCategoryScore(ExpectedScoreDatabase eexpectedScoreDatabase, List<RollCategory> availableCategories) {
 		this.availableCategories = availableCategories;
-		this.strategyTable = strategyTable;
+		this.expectedScoreDatabase = eexpectedScoreDatabase;
 		this.numCategories =availableCategories.size();
 	}
 
@@ -46,7 +46,7 @@ public class BestCategoryScore implements ScoreHeuristic {
 		RollCategory bestCategory=null;
 		float maxScore=0;
 		for (RollCategory category: availableCategories) {
-			float score=category.getDiceScore(dice)+strategyTable.getExpectedScore(availableCategories,category);
+			float score=getCategoryScore(category,dice);
 			if (bestCategory==null||score>maxScore) {
 				bestCategory=category;
 				maxScore=score;
@@ -55,8 +55,11 @@ public class BestCategoryScore implements ScoreHeuristic {
 		return new CategoryScore(bestCategory,maxScore);
 	}
 
+	protected float getCategoryScore(RollCategory category, int dice) {
+		return category.getDiceScore(dice)+ expectedScoreDatabase.getExpectedScore(availableCategories,category);
+	}
 
-	private static class CategoryScore {
+	protected static class CategoryScore {
 		public RollCategory category;
 		public float score;
 
