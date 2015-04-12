@@ -41,17 +41,17 @@ public class YahtzeeMain {
 			e.printStackTrace();
 		}
 		GameSimulation simulation=new GameSimulation(database);
-		int numGames=10;
+		int numGames=3;
 		int totalScore=0;
 		for (int i=0;i<numGames;i++) {
 			int score=simulation.simulate();
 			if (i>0) System.out.print(" - ");
 			System.out.print(score);
 			totalScore+=score;
+			System.out.println("---------------------------------\n");
 		}
 		float avgScore=totalScore/(float)numGames;
-		System.out.println("\n---------------------------------");
-		System.out.printf("Average score : %.1f",avgScore);
+		System.out.printf("Average score : %.1f\n",avgScore);
 
 	}
 
