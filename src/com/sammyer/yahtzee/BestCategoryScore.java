@@ -14,19 +14,19 @@ public class BestCategoryScore implements ScoreHeuristic {
 	protected ExpectedScoreDatabase expectedScoreDatabase;
 	protected int numCategories;
 
-	public BestCategoryScore(ExpectedScoreDatabase eexpectedScoreDatabase, List<RollCategory> availableCategories) {
+	public BestCategoryScore(ExpectedScoreDatabase expectedScoreDatabase, List<RollCategory> availableCategories) {
 		this.availableCategories = availableCategories;
-		this.expectedScoreDatabase = eexpectedScoreDatabase;
+		this.expectedScoreDatabase = expectedScoreDatabase;
 		this.numCategories =availableCategories.size();
 	}
 
 	@Override
-	public float getDiceScore(int dice) {
+	public float getDiceScore(DiceRoll dice) {
 		if (numCategories==0) return 0;
 		else return getBestCategoryScore(dice).score;
 	}
 
-	public RollCategory getBestCategory(int dice) {
+	public RollCategory getBestCategory(DiceRoll dice) {
 		return getBestCategoryScore(dice).category;
 	}
 
@@ -38,7 +38,7 @@ public class BestCategoryScore implements ScoreHeuristic {
 		return RollCategory.getCategoryNames(availableCategories);
 	}
 
-	private CategoryScore getBestCategoryScore(int dice) {
+	private CategoryScore getBestCategoryScore(DiceRoll dice) {
 		if (numCategories==1) {
 			RollCategory category=availableCategories.get(0);
 			return new CategoryScore(category,category.getDiceScore(dice));
@@ -55,7 +55,7 @@ public class BestCategoryScore implements ScoreHeuristic {
 		return new CategoryScore(bestCategory,maxScore);
 	}
 
-	protected float getCategoryScore(RollCategory category, int dice) {
+	protected float getCategoryScore(RollCategory category, DiceRoll dice) {
 		return category.getDiceScore(dice)+ expectedScoreDatabase.getExpectedScore(availableCategories,category);
 	}
 

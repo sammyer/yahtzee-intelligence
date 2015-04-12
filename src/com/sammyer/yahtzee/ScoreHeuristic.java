@@ -8,5 +8,5 @@ package com.sammyer.yahtzee;
  * To change this template use File | Settings | File Templates.
  */
 public interface ScoreHeuristic {
-	public float getDiceScore(int dice);
+	public float getDiceScore(DiceRoll dice);
 }

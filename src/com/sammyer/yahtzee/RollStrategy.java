@@ -38,24 +38,24 @@ public class RollStrategy {
 		return firstRoll.getExpectedScore();
 	}
 	//expected score after first roll
-	public float getExpectedScoreFirstRoll(int dice) {
+	public float getExpectedScoreFirstRoll(DiceRoll dice) {
 		return firstRoll.getDiceScore(dice);
 	}
 	//expected score after first roll
-	public float getExpectedScoreSecondRoll(int dice) {
+	public float getExpectedScoreSecondRoll(DiceRoll dice) {
 		return secondRoll.getDiceScore(dice);
 	}
 
 	//get dice to keep after first roll
-	public int getDiceToKeepFirstRoll(int dice) {
+	public DiceRoll getDiceToKeepFirstRoll(DiceRoll dice) {
 		return firstRoll.getDiceToKeep(dice);
 	}
 	//get dice to keep after second roll
-	public int getDiceToKeepSecondRoll(int dice) {
+	public DiceRoll getDiceToKeepSecondRoll(DiceRoll dice) {
 		return secondRoll.getDiceToKeep(dice);
 	}
 	//get category to choose after third roll
-	public RollCategory getBestCategory(int dice) {
+	public RollCategory getBestCategory(DiceRoll dice) {
 		return categoryChooser.getBestCategory(dice);
 	}
 }

@@ -18,8 +18,8 @@ public class YahtzeeMain {
 
 		YahtzeeMain main=new YahtzeeMain();
 		//main.generateDatabase();
-		main.game();
-		//main.test();
+		//main.game();
+		main.simulate();
 	}
 
 	private void game() {
@@ -31,6 +31,28 @@ public class YahtzeeMain {
 		}
 		TextGame game=new TextGame(database);
 		game.start();
+	}
+
+	private void simulate() {
+		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
+		try {
+			database.load(GameConstants.DB_PATH);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		GameSimulation simulation=new GameSimulation(database);
+		int numGames=10;
+		int totalScore=0;
+		for (int i=0;i<numGames;i++) {
+			int score=simulation.simulate();
+			if (i>0) System.out.print(" - ");
+			System.out.print(score);
+			totalScore+=score;
+		}
+		float avgScore=totalScore/(float)numGames;
+		System.out.println("\n---------------------------------");
+		System.out.printf("Average score : %.1f",avgScore);
+
 	}
 
 	private void test() {

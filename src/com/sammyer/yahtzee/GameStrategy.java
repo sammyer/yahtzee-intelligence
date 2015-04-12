@@ -28,16 +28,16 @@ public class GameStrategy {
 		curStrategy=new RollStrategy(database,categoriesLeft);
 	}
 
-	public int getDiceToKeepFirstRoll(int dice) {
+	public DiceRoll getDiceToKeepFirstRoll(DiceRoll dice) {
 		return curStrategy.getDiceToKeepFirstRoll(dice);
 	}
-	public int getDiceToKeepSecondRoll(int dice) {
+	public DiceRoll getDiceToKeepSecondRoll(DiceRoll dice) {
 		return curStrategy.getDiceToKeepSecondRoll(dice);
 	}
-	public RollCategory getSuggestedCategory(int dice) {
+	public RollCategory getSuggestedCategory(DiceRoll dice) {
 		return curStrategy.getBestCategory(dice);
 	}
-	public void selectCategory(RollCategory category, int dice) {
+	public void selectCategory(RollCategory category, DiceRoll dice) {
 		if (category==RollTypes.yahtzee&&category.matches(dice)) hasYahtzee=true;
 		if (isNumberRoll(category)) numberRollScore+=category.getPointsScored(dice);
 		totalScore+=getPointsScored(category, dice);
@@ -53,7 +53,7 @@ public class GameStrategy {
 		return totalScore;
 	}
 
-	public int getPointsScored(RollCategory category, int dice) {
+	public int getPointsScored(RollCategory category, DiceRoll dice) {
 		int diceScore;
 		int score;
 		if (hasYahtzee&&RollTypes.yahtzee.getDiceScore(dice)>0) {
@@ -84,7 +84,7 @@ public class GameStrategy {
 		return database.getExpectedScore(categoriesLeft,category);
 	}
 
-	public float getExpectedFinalScore(RollCategory category, int dice) {
+	public float getExpectedFinalScore(RollCategory category, DiceRoll dice) {
 		//return totalScore+getPointsScored(category, dice)+getExpectedScoreRestOfGame(category);
 		return totalScore+category.getDiceScore(dice)+getExpectedScoreRestOfGame(category);
 	}

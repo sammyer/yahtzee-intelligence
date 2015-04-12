@@ -17,23 +17,23 @@ public abstract class RollCategory implements ScoreHeuristic {
 	}
 
 	//get points scored
-	public int getPointsScored(int dice) {
+	public int getPointsScored(DiceRoll dice) {
 		return matches(dice)?getPointsScoredIfMatches(dice):0;
 	}
 
 	//matches category
-	public boolean matches(int dice) {
+	public boolean matches(DiceRoll dice) {
 		return true;
 	}
 
 	//for yahtzees - get points scored when matches
 	//this way you can score e.g. large straight on a yahtzee
-	abstract public int getPointsScoredIfMatches(int dice);
+	abstract public int getPointsScoredIfMatches(DiceRoll dice);
 
 	//getDiceScore is score for heuristic calcualtions
 	//this return the actual in-game points scored
 	//usually it is the same, but can be different
-	public float getDiceScore(int dice) {
+	public float getDiceScore(DiceRoll dice) {
 		return getPointsScored(dice);
 	}
 

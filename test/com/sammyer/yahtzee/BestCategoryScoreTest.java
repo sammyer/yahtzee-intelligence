@@ -30,16 +30,16 @@ public class BestCategoryScoreTest extends TestCase {
 
 	public void testGetDiceScoreEstimated() throws Exception {
 		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
-		assertEquals(getScore(0x111110),50f);
+		assertEquals(getScore(23456),50f);
 		database=new MockExpectedScoreDatabase(cat1,cat2,50,10);
-		assertEquals(getScore(0x111110),90f);
+		assertEquals(getScore(23456),90f);
 		database=new MockExpectedScoreDatabase(cat1,cat2,10,50);
-		assertEquals(getScore(0x111110),80f);
+		assertEquals(getScore(23456),80f);
 
 		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
-		assertEquals(getScore(0x021110),40f);
+		assertEquals(getScore(52345),40f);
 		database=new MockExpectedScoreDatabase(cat1,cat2,60,10);
-		assertEquals(getScore(0x021110),60f);
+		assertEquals(getScore(52345),60f);
 	}
 
 	private float getScore(int dice) {
@@ -47,21 +47,21 @@ public class BestCategoryScoreTest extends TestCase {
 		cats.add(cat1);
 		cats.add(cat2);
 		BestCategoryScore chooser=new BestCategoryScore(database,cats);
-		return chooser.getDiceScore(dice);
+		return chooser.getDiceScore(DiceRoll.fromFaceValues(dice));
 	}
 
 	public void testGetBestCategory() throws Exception {
 		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
-		assertEquals(getCategory(0x111110),cat2);
+		assertEquals(getCategory(23456),cat2);
 		database=new MockExpectedScoreDatabase(cat1,cat2,50,10);
-		assertEquals(getCategory(0x111110),cat2);
+		assertEquals(getCategory(23456),cat2);
 		database=new MockExpectedScoreDatabase(cat1,cat2,10,50);
-		assertEquals(getCategory(0x111110),cat1);
+		assertEquals(getCategory(23456),cat1);
 
 		database=new MockExpectedScoreDatabase(cat1,cat2,10,10);
-		assertEquals(getCategory(0x021110),cat1);
+		assertEquals(getCategory(52345),cat1);
 		database=new MockExpectedScoreDatabase(cat1,cat2,50,10);
-		assertEquals(getCategory(0x021110),cat2);
+		assertEquals(getCategory(52345),cat2);
 	}
 
 	private RollCategory getCategory(int dice) {
@@ -69,7 +69,7 @@ public class BestCategoryScoreTest extends TestCase {
 		cats.add(cat1);
 		cats.add(cat2);
 		BestCategoryScore chooser=new BestCategoryScore(database,cats);
-		return chooser.getBestCategory(dice);
+		return chooser.getBestCategory(DiceRoll.fromFaceValues(dice));
 	}
 
 	/**

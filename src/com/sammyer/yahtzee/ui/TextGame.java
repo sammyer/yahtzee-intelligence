@@ -32,9 +32,9 @@ public class TextGame {
 		}
 	}
 
-	private int readDice() {
+	private DiceRoll readDice() {
 		String s=readLine();
-		if (s==null) return 0;
+		if (s==null) return new DiceRoll();
 		return DiceRoll.fromFaceValues(Integer.parseInt(s));
 	}
 
@@ -48,18 +48,18 @@ public class TextGame {
 	}
 
 	public void start() {
-		int dice;
-		int keepDice;
+		DiceRoll dice;
+		DiceRoll keepDice;
 		RollCategory category;
 		while (!strategy.getCategoriesLeft().isEmpty()) {
 			System.out.print("Dice - roll 1 : ");
 			dice=readDice();
 			keepDice=strategy.getDiceToKeepFirstRoll(dice);
-			System.out.println("Suggested dice to keep : " + DiceRoll.toFaceValues(keepDice));
+			System.out.println("Suggested dice to keep : " + keepDice.getFaceValues());
 			System.out.print("Dice - roll 2 : ");
 			dice=readDice();
 			keepDice=strategy.getDiceToKeepSecondRoll(dice);
-			System.out.println("Suggested dice to keep : " + DiceRoll.toFaceValues(keepDice));
+			System.out.println("Suggested dice to keep : " + keepDice.getFaceValues());
 			System.out.print("Dice - roll 3 : ");
 			dice=readDice();
 			category=strategy.getSuggestedCategory(dice);

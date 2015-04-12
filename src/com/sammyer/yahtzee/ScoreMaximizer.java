@@ -10,7 +10,7 @@ package com.sammyer.yahtzee;
 public class ScoreMaximizer implements ScoreHeuristic {
 	private ScoreHeuristic heuristic;
 	private float expectedScoreAllRolls;
-	private int[] strategies;
+	private DiceRoll[] strategies;
 	private float[] strategyScores;
 	private boolean cacheHeuristic=true; //for slow heuristics
 
@@ -20,12 +20,12 @@ public class ScoreMaximizer implements ScoreHeuristic {
 	}
 
 	@Override
-	public float getDiceScore(int dice) {
-		return strategyScores[DiceRoll.getInstance().hashDice(dice)];
+	public float getDiceScore(DiceRoll dice) {
+		return strategyScores[dice.getHash()];
 	}
 
-	public int getDiceToKeep(int dice) {
-		return strategies[DiceRoll.getInstance().hashDice(dice)];
+	public DiceRoll getDiceToKeep(DiceRoll dice) {
+		return strategies[dice.getHash()];
 	}
 
 	public float getExpectedScore() {
@@ -33,23 +33,32 @@ public class ScoreMaximizer implements ScoreHeuristic {
 	}
 
 	private float[] generateExpectedScores() {
-		DiceRoll rolls=DiceRoll.getInstance();
-		float[] expectedScores=new float[DiceRoll.HASH_SIZE];
-		for (int idx=rolls.startHashIdx(5);idx<rolls.endHashIdx(5);idx++) {
-			expectedScores[idx]=heuristic.getDiceScore(rolls.unhashDice(idx));
+		DiceRollHashTable diceHash=DiceRollHashTable.getInstance();
+		DiceRoll roll=new DiceRoll();
+		DiceRoll baseRoll=new DiceRoll();
+
+		float[] expectedScores=new float[DiceRollHashTable.HASH_SIZE];
+		for (int idx=diceHash.startHashIdx(5);idx<diceHash.endHashIdx(5);idx++) {
+			roll.setFromHash(idx);
+			expectedScores[idx]=heuristic.getDiceScore(roll);
 		}
 
 		for (int numKept=0;numKept<5;numKept++) {
 			int numRolled=5-numKept;
-			for (int i=rolls.startHashIdx(numKept);i<rolls.endHashIdx(numKept);i++) {
+			for (int i=diceHash.startHashIdx(numKept);i<diceHash.endHashIdx(numKept);i++) {
 				int rollCount=0;
 				float totalScore=0;
-				for (int j=rolls.startHashIdx(numRolled);j<rolls.endHashIdx(numRolled);j++) {
-					int permutations=rolls.numPermutations(j);
+				baseRoll.setFromHash(i);
+
+				for (int j=diceHash.startHashIdx(numRolled);j<diceHash.endHashIdx(numRolled);j++) {
+					int permutations=diceHash.numPermutations(j);
 					rollCount+=permutations;
-					int dice=rolls.unhashDice(i)+rolls.unhashDice(j);
-					if (cacheHeuristic) totalScore+=permutations*expectedScores[rolls.hashDice(dice)];
-					else totalScore+=permutations*heuristic.getDiceScore(dice);
+
+					roll.setFromHash(j);
+					roll.addDice(baseRoll);
+
+					if (cacheHeuristic) totalScore+=permutations*expectedScores[roll.getHash()];
+					else totalScore+=permutations*heuristic.getDiceScore(roll);
 				}
 				expectedScores[i]=totalScore/rollCount;
 			}
@@ -59,32 +68,34 @@ public class ScoreMaximizer implements ScoreHeuristic {
 	}
 
 	private void generateStrategies() {
-		DiceRoll rolls=DiceRoll.getInstance();
+		DiceRollHashTable diceHash=DiceRollHashTable.getInstance();
+		DiceRoll roll=new DiceRoll();
 		float[] expectedScores=generateExpectedScores();
-		strategies=new int[DiceRoll.HASH_SIZE];
-		strategyScores=new float[DiceRoll.HASH_SIZE];
+		strategies=new DiceRoll[DiceRollHashTable.HASH_SIZE];
+		strategyScores=new float[DiceRollHashTable.HASH_SIZE];
 
 		float totalScore=0;
 		int rollCount=0;
-		DiceRoll.SubsetIterator subsets;
+		DiceRollSubsetIterator subsets;
 
-		for (int idx=rolls.startHashIdx(5);idx<rolls.endHashIdx(5);idx++) {
+		for (int idx=diceHash.startHashIdx(5);idx<diceHash.endHashIdx(5);idx++) {
 			//expectedScores[idx]=heuristic.getDiceScore(rolls.unhashDice(idx));
-			subsets=new DiceRoll.SubsetIterator(rolls.unhashDice(idx));
-			int bestKeepStrategy=0;
+			roll.setFromHash(idx);
+			DiceRoll bestKeepStrategy=new DiceRoll();
 			float bestScore=-999;
-			while (subsets.hasNext()) {
-				int keepers=subsets.next();
-				float score=expectedScores[rolls.hashDice(keepers)];
+			DiceRollSubsetIterator subset=roll.getSubsetIterator();
+			while (subset.hasNext()) {
+				subset.next();
+				float score=expectedScores[subset.getHash()];
 				if (score>bestScore) {
 					bestScore=score;
-					bestKeepStrategy=keepers;
+					bestKeepStrategy.set(subset);
 				}
 			}
 			strategies[idx]=bestKeepStrategy;
 			strategyScores[idx]=bestScore;
 
-			int permutations=rolls.numPermutations(idx);
+			int permutations=diceHash.numPermutations(idx);
 			totalScore+=permutations*bestScore;
 			rollCount+=permutations;
 		}

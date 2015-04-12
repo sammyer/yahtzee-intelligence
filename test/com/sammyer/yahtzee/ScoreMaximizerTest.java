@@ -38,15 +38,20 @@ public class ScoreMaximizerTest extends TestCase {
 	}
 
 	public void testGetDiceScore() throws Exception {
-		System.out.println("\nSixes dice score 34466 ="+sixes.getDiceScore(0x202100));
-		System.out.println("Full house dice score 34466 ="+fullHouse.getDiceScore(0x202100));
-		System.out.println("Yahtzee dice score 11116 =" + yahtzee.getDiceScore(0x100004));
+		System.out.println("\nSixes dice score 34466 ="+sixes.getDiceScore(DiceRoll.fromFaceValues(34466)));
+		System.out.println("Full house dice score 34466 ="+fullHouse.getDiceScore(DiceRoll.fromFaceValues(34466)));
+		System.out.println("Yahtzee dice score 11116 =" + yahtzee.getDiceScore(DiceRoll.fromFaceValues(11116)));
 	}
 
 	public void testGetDiceToKeep() throws Exception {
-		assertEquals(sixes.getDiceToKeep(0x202100),0x200000);
-		assertEquals(fullHouse.getDiceToKeep(0x202100),0x202000);
-		assertEquals(yahtzee.getDiceToKeep(0x100004),0x000004);
+		checkKeep(sixes,34466,66);
+		checkKeep(fullHouse,34466,4466);
+		checkKeep(yahtzee,11116,1111);
+	}
+	private void checkKeep(ScoreMaximizer maximizer, int diceFaces, int keepFaces) {
+		assertEquals(
+				maximizer.getDiceToKeep(DiceRoll.fromFaceValues(diceFaces)).getDiceCounts(),
+				DiceRoll.fromFaceValues(keepFaces).getDiceCounts());
 	}
 
 	public void testGetExpectedScore() throws Exception {
