@@ -13,7 +13,7 @@ import sun.rmi.runtime.Log;
  */
 public class GameSimulation {
 	private ExpectedScoreDatabase database;
-	private boolean verbose=true;
+	public boolean verbose=true;
 
 	public GameSimulation(ExpectedScoreDatabase database) {
 		this.database = database;
@@ -22,6 +22,7 @@ public class GameSimulation {
 	public int simulate() {
 		GameStrategy strategy=new GameStrategy(database);
 		DiceRoll dice;
+		if (verbose) System.out.println("\n-------------------------------------");
 		while (!strategy.getCategoriesLeft().isEmpty()) {
 			dice= rollDice(strategy);
 			RollCategory category=strategy.getSuggestedCategory(dice);

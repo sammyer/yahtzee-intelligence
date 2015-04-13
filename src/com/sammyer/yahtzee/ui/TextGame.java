@@ -5,6 +5,8 @@ import com.sammyer.yahtzee.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ import java.util.List;
 public class TextGame {
 	private BufferedReader console;
 	private GameStrategy strategy;
+	private static final int MAX_CATS_TO_SHOW=4;
 
 	public TextGame(ExpectedScoreDatabase database) {
 		this.strategy=new GameStrategy(database);
@@ -64,8 +67,22 @@ public class TextGame {
 			dice=readDice();
 			category=strategy.getSuggestedCategory(dice);
 			List<RollCategory> categoriesLeft=strategy.getCategoriesLeft();
+			final DiceRoll sortDice=dice;
+			Collections.sort(categoriesLeft,new Comparator<RollCategory>() {
+				@Override
+				public int compare(RollCategory o1, RollCategory o2) {
+					return Float.compare(
+							strategy.getExpectedFinalScore(o2,sortDice),
+							strategy.getExpectedFinalScore(o1,sortDice));
+				}
+			});
 			System.out.println("Categories left=" + RollCategory.getCategoryNames(categoriesLeft));
+
+			int i=0;
 			for (RollCategory cat:categoriesLeft) {
+				if (i==MAX_CATS_TO_SHOW) break;
+				i++;
+
 				System.out.println(String.format("%s%-18s pts=%d   sc=%d+%.1f+%.1f=%.1f",
 						cat==category?"*":" ",
 						cat.getName(),
