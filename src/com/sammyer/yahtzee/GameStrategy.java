@@ -56,7 +56,7 @@ public class GameStrategy {
 	public int getPointsScored(RollCategory category, DiceRoll dice) {
 		int diceScore;
 		int score;
-		if (hasYahtzee&&RollTypes.yahtzee.getDiceScore(dice)>0) {
+		if (hasYahtzee&&category!=RollTypes.yahtzee&&RollTypes.yahtzee.getDiceScore(dice)>0) {
 			diceScore=category.getPointsScoredIfMatches(dice);
 			score=diceScore+100;
 		} else {

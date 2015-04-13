@@ -43,6 +43,7 @@ public class GameStrategyTest extends TestCase {
 		check(RollTypes.largeStraight, 11111, 0);
 		check(RollTypes.yahtzee, 11111, 50);
 		select(RollTypes.yahtzee,11111);
+		assertEquals(strategy.getTotalScore(),50);
 		check(RollTypes.largeStraight, 11111, 140);
 
 		strategy=new GameStrategy(database);
