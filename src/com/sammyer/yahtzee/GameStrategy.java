@@ -38,9 +38,9 @@ public class GameStrategy {
 		return curStrategy.getBestCategory(dice);
 	}
 	public void selectCategory(RollCategory category, DiceRoll dice) {
+		totalScore+=getPointsScored(category, dice);
 		if (category==RollTypes.yahtzee&&category.matches(dice)) hasYahtzee=true;
 		if (isNumberRoll(category)) numberRollScore+=category.getPointsScored(dice);
-		totalScore+=getPointsScored(category, dice);
 		categoriesLeft.remove(category);
 		curStrategy=new RollStrategy(database,categoriesLeft);
 	}
