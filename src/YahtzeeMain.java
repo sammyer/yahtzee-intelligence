@@ -1,6 +1,7 @@
 import com.sammyer.yahtzee.*;
 import com.sammyer.yahtzee.ui.GameSimulation;
 import com.sammyer.yahtzee.ui.TextGame;
+import com.sammyer.yahtzee.ui.VersusGame;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,8 @@ public class YahtzeeMain {
 
 		YahtzeeMain main=new YahtzeeMain();
 		//main.generateDatabase();
-		main.game();
+		//main.game();
+		main.versus();
 		//main.simulate();
 		//System.out.println(main.getDataUri());
 	}
@@ -42,6 +44,17 @@ public class YahtzeeMain {
 			e.printStackTrace();
 		}
 		TextGame game=new TextGame(database);
+		game.start();
+	}
+
+	private void versus() {
+		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
+		try {
+			database.load(getDataUri());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		VersusGame game=new VersusGame(database);
 		game.start();
 	}
 

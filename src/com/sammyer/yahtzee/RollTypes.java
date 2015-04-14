@@ -32,6 +32,32 @@ public class RollTypes {
 		return getRollCategories().get(n-1);
 	}
 
+	public static RollCategory parseCategory(String categoryString) {
+		if (categoryString==null||categoryString.isEmpty()) return null;
+		String s=categoryString.toLowerCase();
+		int n=0;
+		if (s.contains("1")||s.contains("one")) n=1;
+		else if (s.contains("2")||s.contains("two")) n=2;
+		else if (s.contains("3")||s.contains("three")) n=3;
+		else if (s.contains("4")||s.contains("four")) n=4;
+		else if (s.contains("5")||s.contains("five")) n=5;
+		else if (s.contains("6")||s.contains("six")) n=6;
+
+		RollCategory cat;
+		if (s.contains("c")) cat=chance;
+		else if (s.contains("y")) cat=yahtzee;
+		else if (s.startsWith("f")&&n==0) cat=fullHouse;
+		else if (n==3&&(s.contains("k")||s.contains("x"))) cat=threeOfAKind;
+		else if (n==4&&(s.contains("k")||s.contains("x"))) cat=fourOfAKind;
+		else if (n>0) cat=getNumberCategory(n);
+		else if (s.contains("m")) cat=smallStraight;
+		else if (s.contains("l")) cat=largeStraight;
+		else if (s.startsWith("s")) cat=smallStraight;
+		else cat=null;
+
+		return cat;
+	}
+
 	public static RollCategory largeStraight=new RollCategory("Lg Straight") {
 		@Override
 		public boolean matches(DiceRoll dice) {
