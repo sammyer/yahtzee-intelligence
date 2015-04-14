@@ -73,6 +73,9 @@ public class ExpectedScoreDatabase {
 	}
 	public void load(String path) throws IOException {
 		FileInputStream fileStream=new FileInputStream(path);
+		load(fileStream);
+	}
+	public void load(InputStream fileStream) throws IOException {
 		DataInputStream dataStream = new DataInputStream(fileStream);
 		try {
 			for (int i=0;i<8192;i++) {

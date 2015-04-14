@@ -1,3 +1,5 @@
+package com.sammyer.yahtzee.ui;
+
 import com.sammyer.yahtzee.DiceRoll;
 import com.sammyer.yahtzee.ExpectedScoreDatabase;
 import com.sammyer.yahtzee.GameStrategy;
@@ -58,7 +60,7 @@ public class GameSimulation {
 		else {
 			dice.setRandom(5-keepers.getNumDice());
 			dice.addDice(keepers);
-			if (verbose) System.out.printf("Third roll: %d\n",dice.getFaceValues());
+			if (verbose) System.out.printf("Third roll: %d\n", dice.getFaceValues());
 			return dice;
 		}
 	}

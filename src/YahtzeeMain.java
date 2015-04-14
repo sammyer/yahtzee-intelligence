@@ -1,7 +1,9 @@
 import com.sammyer.yahtzee.*;
+import com.sammyer.yahtzee.ui.GameSimulation;
 import com.sammyer.yahtzee.ui.TextGame;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -20,12 +22,22 @@ public class YahtzeeMain {
 		//main.generateDatabase();
 		main.game();
 		//main.simulate();
+		//System.out.println(main.getDataUri());
+	}
+
+	public InputStream getDataUri() {
+		return getClass().getClassLoader().getResourceAsStream("yahtzee.bin");
+		//return GameConstants.DB_PATH;
+	}
+
+	private String getOutputUri() {
+		return null;
 	}
 
 	private void game() {
 		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
 		try {
-			database.load(GameConstants.DB_PATH);
+			database.load(getDataUri());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -36,7 +48,7 @@ public class YahtzeeMain {
 	private void simulate() {
 		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
 		try {
-			database.load(GameConstants.DB_PATH);
+			database.load(getDataUri());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,18 +58,18 @@ public class YahtzeeMain {
 		int totalScore=0;
 		for (int i=0;i<numGames;i++) {
 			int score=simulation.simulate();
-			System.out.print("| "+score);
+			System.out.print("| " + score);
 			totalScore+=Math.min(score,350);
 		}
 		float avgScore=totalScore/(float)numGames;
-		System.out.printf("\nAverage score : %.1f\n",avgScore);
+		System.out.printf("\nAverage score : %.1f\n", avgScore);
 
 	}
 
 	private void test() {
 		ExpectedScoreDatabase database=new ExpectedScoreDatabase();
 		try {
-			database.load(GameConstants.DB_PATH);
+			database.load(getDataUri());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,13 +90,12 @@ public class YahtzeeMain {
 		long t=System.currentTimeMillis();
 		ExpectedScoreDatabase expectedScoreDatabase =calculator.generateStrategies();
 		long tdiff=System.currentTimeMillis()-t;
-
 		try {
-			expectedScoreDatabase.save(GameConstants.DB_PATH);
+			expectedScoreDatabase.save(getOutputUri());
 		} catch (IOException e) {
 			System.out.println("Error saving database - "+e.toString());
 		}
-		System.out.println("Complete in "+(int)tdiff+" ms");
+		System.out.println("\n\nComplete in "+(int)tdiff+" ms");
 	}
 
 }
